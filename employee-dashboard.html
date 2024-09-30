@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แดชบอร์ดพนักงาน</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="em-dashboard-container">
+        <h2>ยินดีต้อนรับสู่แดชบอร์ดพนักงาน</h2>
+        <p>ชื่อพนักงาน: <span id="employee-name">นายสมชาย ใจดี</span></p>
+        
+        <h3>ฟังก์ชันการใช้งาน</h3>
+        <button onclick="applyLeave()">ขอลา</button>
+        <button onclick="checkLeave()">ตรวจสอบวันลา</button>
+        <button onclick="viewLeaveCalendar()">ดูปฏิทินการลา</button>
+        <button onclick="logout()">ออกจากระบบ</button>
+
+        <!-- ฟอร์มขอลา -->
+        <div id="leave-application-form" style="display:none;">
+            <h3>ฟอร์มขอลา</h3>
+            <div class="form-group">
+                <input type="text" id="leave-type" placeholder="ประเภทการลา (ลาป่วย/ลากิจ)" required>
+            </div>
+            <div class="form-group">
+                <input type="date" id="leave-date" required>
+            </div>
+            <div class="form-group">
+                <input type="time" id="leave-time" required>
+            </div>
+            <div class="form-group">
+                <textarea id="leave-reason" placeholder="เหตุผลการลา" required></textarea>
+            </div>
+            <button onclick="submitLeave()">ส่งคำขอลา</button>
+            <div id="leave-message"></div>
+        </div>
+
+        <!-- สถานะการลา -->
+        <div id="leave-status" style="display:none;">
+            <h3>สถานะการลา</h3>
+            <p>คุณยังมีวันลาคงเหลือ: <span id="remaining-leave-days">10</span> วัน</p>
+            <div id="approval-notification" style="color: green;"></div> <!-- แจ้งเตือน -->
+            <div id="leave-approval-status" style="color: blue;"></div> <!-- สถานะคำขอ -->
+        </div>
+
+        <!-- ปฏิทินการลา -->
+        <div id="leave-calendar" style="display:none;">
+            <h3>ปฏิทินการลา</h3>
+            <table id="leave-calendar-table">
+                <thead>
+                    <tr>
+                        <th>วันที่</th>
+                        <th>เวลา</th>
+                        <th>ประเภทการลา</th>
+                        <th>เหตุผล</th>
+                        <th>สถานะ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- ตารางนี้จะถูกเติมข้อมูลการลา -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // ตรวจสอบสถานะการอนุมัติคำขอเมื่อโหลดหน้า
+        window.onload = function() {
+            const approvalNotification = document.getElementById('approval-notification');
+            const leaveApprovalStatus = document.getElementById('leave-approval-status');
+            const leaveRequests = JSON.parse(localStorage.getItem('leaveRequests')) || [];
+            const employeeName = document.getElementById('employee-name').innerText;
+
+            let isRequestFound = false;
+
+            leaveRequests.forEach(request => {
+                if (request.employeeName === employeeName) {
+                    approvalNotification.innerHTML = "คำขอของคุณได้รับการส่งเรียบร้อยแล้ว!";
+                    leaveApprovalStatus.innerHTML = `สถานะคำขอ: ${request.status}`;
+                    isRequestFound = true;
+                }
+            });
+
+            if (!isRequestFound) {
+                approvalNotification.innerHTML = "";
+                leaveApprovalStatus.innerHTML = "ไม่มีคำขอที่รอดำเนินการ";
+            }
+        };
+
+        // แสดงฟอร์มขอลา
+        function applyLeave() {
+            document.getElementById('leave-application-form').style.display = "block";
+            document.getElementById('leave-status').style.display = "none";
+            document.getElementById('leave-calendar').style.display = "none";
+        }
+
+        // แสดงสถานะการลา
+        function checkLeave() {
+            document.getElementById('leave-status').style.display = "block";
+            document.getElementById('leave-application-form').style.display = "none";
+            document.getElementById('leave-calendar').style.display = "none";
+        }
+
+        // แสดงปฏิทินการลา
+        function viewLeaveCalendar() {
+            document.getElementById('leave-calendar').style.display = "block";
+            document.getElementById('leave-status').style.display = "none";
+            document.getElementById('leave-application-form').style.display = "none";
+
+            // ดึงข้อมูลคำขอลาจาก localStorage
+            const leaveRequests = JSON.parse(localStorage.getItem('leaveRequests')) || [];
+            const calendarTableBody = document.querySelector('#leave-calendar-table tbody');
+            calendarTableBody.innerHTML = ''; // ล้างข้อมูลในตารางก่อน
+
+            // เติมข้อมูลการลาในตาราง
+            leaveRequests.forEach(request => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${request.leaveDate}</td>
+                    <td>${request.leaveTime}</td>
+                    <td>${request.leaveType}</td>
+                    <td>${request.leaveReason}</td>
+                    <td>${request.status}</td>
+                `;
+                calendarTableBody.appendChild(row);
+            });
+        }
+
+        // ส่งคำขอลา
+        function submitLeave() {
+            const leaveType = document.getElementById('leave-type').value;
+            const leaveDate = document.getElementById('leave-date').value;
+            const leaveTime = document.getElementById('leave-time').value;
+            const leaveReason = document.getElementById('leave-reason').value;
+            const leaveMessage = document.getElementById('leave-message');
+
+            // บันทึกคำขอลาใน localStorage
+            const leaveRequests = JSON.parse(localStorage.getItem('leaveRequests')) || [];
+            leaveRequests.push({
+                employeeName: "นายสมชาย ใจดี", // หรือชื่อพนักงานที่เข้าสู่ระบบ
+                leaveType,
+                leaveDate,
+                leaveTime,
+                leaveReason,
+                status: "รอการอนุมัติ"
+            });
+            localStorage.setItem('leaveRequests', JSON.stringify(leaveRequests));
+
+            leaveMessage.innerHTML = `คำขอลา: ${leaveType} วันที่: ${leaveDate} เวลา: ${leaveTime} เหตุผล: ${leaveReason} ส่งเรียบร้อยแล้ว!`;
+            leaveMessage.style.color = "green";
+
+            // ล้างข้อมูลในฟอร์ม
+            document.getElementById('leave-type').value = '';
+            document.getElementById('leave-date').value = '';
+            document.getElementById('leave-time').value = '';
+            document.getElementById('leave-reason').value = '';
+        }
+
+        // ออกจากระบบ
+        function logout() {
+            window.location.href = "login.html"; // กลับไปที่หน้า login
+        }
+    </script>
+</body>
+</html>

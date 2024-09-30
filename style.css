@@ -1,0 +1,209 @@
+body {
+    margin-top: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom, #003366, #006699, #3399cc, #66ccff); /* ไล่ระดับสี */
+    font-family: Arial, sans-serif;
+}
+
+
+.login-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+.login-container h2 {
+    color: #003366;
+    margin-bottom: 20px;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.login-container button {
+    background-color: #175da4;
+    color: white;
+    padding: 20px;
+    width: 50%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.login-container button:hover {
+    background-color: #125292;
+}
+
+.container {
+    width: 90%;
+    height: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 35px;
+    text-align: center;
+    color:rgb(195, 207, 216);
+    
+    
+    
+}
+
+.container button{
+    background-color: #175da4;
+    color: white;
+    padding: 20px;
+    width: 40%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    margin-top: 20px;
+
+}
+
+.em-dashboard-container{
+    color: white;
+    width: 50%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 25px;
+}
+
+.em-dashboard-container button{
+    background-color: #f2f5f8;
+    padding: 10px;
+    width: 35%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.form-group{
+    margin-top: 10px;
+    box-sizing:content-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    text-align: center;
+    color:rgb(195, 207, 216);
+}
+
+#leave-calendar {
+    margin-top: 10px;
+    font-size: 16px;
+    text-align: center;
+    color:rgb(10, 35, 54);
+    box-sizing:content-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 700px;      
+    height: 300px;      
+    overflow-y: scroll;
+}
+
+.hr-dashboard-container{
+    color: white;
+    width: 50%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 25px;
+}
+
+.hr-dashboard-container button{
+    background-color: #f2f5f8;
+    padding: 10px;
+    width: 35%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+#leave-requests{
+    padding: -50%;
+    margin-top: 10px;
+    font-size: 16px;
+    color:rgb(4, 40, 67);
+    border-radius: 5px;
+    box-sizing:border-box;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    width: 800px;      
+    height: 350px;      
+    overflow-y: scroll;
+}
+
+
+#leave-request-list li button {
+    background-color: #add5e0;
+    box-sizing:content-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    width: 10%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 10px;
+    margin-top: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(180, 41, 110);
+    
+}
+
+#employee-data{
+    padding: -50%;
+    margin-top: 10px;
+    font-size: 16px;
+    color:rgb(4, 40, 67);
+    border-radius: 5px;
+    box-sizing:border-box;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    width: 800px;      
+    height: 200px;      
+    overflow-y: scroll;
+}
+
+#employee-data button {
+    background-color: #007BFF; /* สีพื้นหลัง */
+    color: white; /* สีตัวอักษร */
+    border: none; /* ไม่มีกรอบ */
+    padding: 5px 10px; /* padding */
+    width: 50px;
+    border-radius: 5px; /* มุมมน */
+    cursor: pointer; /* แสดงว่าเป็นปุ่ม */
+    margin-left: 5px; /* ระยะห่างจากปุ่มอื่น */
+    text-align: center;
+    font-size: 12px;
+    
+}

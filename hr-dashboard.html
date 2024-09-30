@@ -1,0 +1,215 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดการ HR</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="hr-dashboard-container">
+        <h2>ยินดีต้อนรับสู่ระบบจัดการ HR</h2>
+        <h3>ฟังก์ชันการใช้งาน</h3>
+        <button onclick="viewEmployees()">ข้อมูลพนักงาน</button>
+        <button onclick="addEmployee()">เพิ่มพนักงาน</button>
+        <button onclick="viewLeaveRequests()">ดูคำขอลา</button>
+        <button onclick="logout()">ออกจากระบบ</button>
+
+        <div id="employee-list" style="display:none;">
+            <h3>ข้อมูลพนักงาน</h3>
+            <ul id="employee-data"></ul>
+        </div>
+
+        <div id="employee-form" style="display:none;">
+            <h3>ฟอร์มเพิ่ม/แก้ไขพนักงาน</h3>
+            <input type="hidden" id="edit-index" value="-1">
+            <div class="form-group">
+                <input type="text" id="employee-name" placeholder="ชื่อพนักงาน" required>
+            </div>
+            <div class="form-group">
+                <input type="number" id="employee-age" placeholder="อายุ" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="employee-position" placeholder="ตำแหน่ง" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="employee-phone" placeholder="เบอร์โทร" required>
+            </div>
+            <div class="form-group">
+                <input type="email" id="employee-email" placeholder="อีเมล" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="employee-address" placeholder="ที่อยู่" required>
+            </div>            
+            <button onclick="submitEmployee()">บันทึกพนักงาน</button>
+            <div id="employee-message"></div>
+        </div>
+
+        <div id="leave-requests" style="display:none;">
+            <h3>คำขอลา</h3>
+            <ul id="leave-request-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        function viewEmployees() {
+            const employees = JSON.parse(localStorage.getItem('employees')) || [];
+            const employeeData = document.getElementById('employee-data');
+            employeeData.innerHTML = '';
+
+            employees.forEach((employee, index) => {
+                employeeData.innerHTML += `
+                    <li>
+                        ${employee.name} - ตำแหน่ง: ${employee.position}, เบอร์โทร: ${employee.phone}, อีเมล: ${employee.email}, ที่อยู่: ${employee.address}
+                        <button onclick="editEmployee(${index})">แก้ไข</button>
+                        <button onclick="deleteEmployee(${index})">ลบ</button>
+                    </li>
+                `;
+            });
+
+            document.getElementById('employee-list').style.display = "block";
+            document.getElementById('employee-form').style.display = "none";
+            document.getElementById('leave-requests').style.display = "none";
+        }
+
+        function addEmployee() {
+            document.getElementById('employee-form').style.display = "block";
+            document.getElementById('employee-list').style.display = "none";
+            document.getElementById('leave-requests').style.display = "none";
+            document.getElementById('edit-index').value = -1; // ตั้งค่าเป็นเพิ่มพนักงานใหม่
+            document.getElementById('employee-name').value = '';
+            document.getElementById('employee-age').value = '';
+            document.getElementById('employee-position').value = '';
+            document.getElementById('employee-phone').value = '';
+            document.getElementById('employee-email').value = '';
+            document.getElementById('employee-address').value = '';
+        }
+
+        function editEmployee(index) {
+            const employees = JSON.parse(localStorage.getItem('employees')) || [];
+            const employee = employees[index];
+
+            document.getElementById('edit-index').value = index; // เก็บ index สำหรับแก้ไข
+            document.getElementById('employee-name').value = employee.name;
+            document.getElementById('employee-age').value = employee.age;
+            document.getElementById('employee-position').value = employee.position;
+            document.getElementById('employee-phone').value = employee.phone;
+            document.getElementById('employee-email').value = employee.email;
+            document.getElementById('employee-address').value = employee.address;
+
+            document.getElementById('employee-form').style.display = "block";
+            document.getElementById('employee-list').style.display = "none";
+            document.getElementById('leave-requests').style.display = "none";
+        }
+
+        function deleteEmployee(index) {
+            const employees = JSON.parse(localStorage.getItem('employees')) || [];
+            employees.splice(index, 1);
+            localStorage.setItem('employees', JSON.stringify(employees));
+            viewEmployees(); // รีเฟรชรายการพนักงาน
+        }
+
+        function submitEmployee() {
+            const employeeName = document.getElementById('employee-name').value;
+            const employeeAge = document.getElementById('employee-age').value;
+            const employeePosition = document.getElementById('employee-position').value;
+            const employeePhone = document.getElementById('employee-phone').value;
+            const employeeEmail = document.getElementById('employee-email').value;
+            const employeeAddress = document.getElementById('employee-address').value;
+            const employeeMessage = document.getElementById('employee-message');
+            const index = document.getElementById('edit-index').value;
+
+            let employees = JSON.parse(localStorage.getItem('employees')) || [];
+
+            if (index == -1) {
+                // เพิ่มพนักงานใหม่
+                employees.push({ name: employeeName, age: employeeAge, position: employeePosition, phone: employeePhone, email: employeeEmail, address: employeeAddress });
+                employeeMessage.innerHTML = `เพิ่มพนักงาน: ${employeeName} ตำแหน่ง: ${employeePosition} สำเร็จ!`;
+            } else {
+                // แก้ไขพนักงานที่มีอยู่
+                employees[index] = { name: employeeName, age: employeeAge, position: employeePosition, phone: employeePhone, email: employeeEmail, address: employeeAddress };
+                employeeMessage.innerHTML = `แก้ไขพนักงาน: ${employeeName} ตำแหน่ง: ${employeePosition} สำเร็จ!`;
+            }
+
+            localStorage.setItem('employees', JSON.stringify(employees));
+            employeeMessage.style.color = "green";
+            document.getElementById('employee-name').value = '';
+            document.getElementById('employee-age').value = '';
+            document.getElementById('employee-position').value = '';
+            document.getElementById('employee-phone').value = '';
+            document.getElementById('employee-email').value = '';
+            document.getElementById('employee-address').value = '';
+            viewEmployees(); // รีเฟรชรายการพนักงาน
+        }
+
+        function viewLeaveRequests() {
+            const leaveRequests = JSON.parse(localStorage.getItem('leaveRequests')) || [];
+            const leaveRequestList = document.getElementById('leave-request-list');
+            leaveRequestList.innerHTML = '';
+
+            if (leaveRequests.length === 0) {
+                // ถ้าไม่มีคำขอลาใน localStorage แสดงข้อความแจ้ง
+                leaveRequestList.innerHTML = '<li>ไม่มีคำขอลาในขณะนี้</li>';
+            } else {
+                // ถ้ามีคำขอลา ให้แสดงคำขอลา
+                leaveRequests.forEach((request, index) => {
+                    leaveRequestList.innerHTML += `
+                        <li id="request-${index}">
+                            ${request.employeeName} - ${request.leaveType} วันที่: ${request.leaveDate} - เหตุผล: ${request.leaveReason}
+                            <button onclick="approveLeave(${index})">อนุมัติ</button>
+                            <button onclick="denyLeave(${index})">ปฏิเสธ</button>
+                        </li>
+                    `;
+                });
+            }
+
+            document.getElementById('leave-requests').style.display = "block";
+            document.getElementById('employee-list').style.display = "none";
+            document.getElementById('employee-form').style.display = "none";
+        }
+
+        function approveLeave(index) {
+            const leaveRequests = JSON.parse(localStorage.getItem('leaveRequests')) || [];
+
+            leaveRequests[index].status = "อนุมัติ";
+            localStorage.setItem('leaveRequests', JSON.stringify(leaveRequests));
+            alert("คำขอได้รับการอนุมัติ");
+
+            // ลบคำขอที่อนุมัติออกจาก DOM
+            document.getElementById(`request-${index}`).remove();
+
+            // ส่งการแจ้งเตือนให้พนักงาน (Employee)
+            notifyEmployee(leaveRequests[index], "อนุมัติ");
+        }
+
+        function denyLeave(index) {
+            const leaveRequests = JSON.parse(localStorage.getItem('leaveRequests')) || [];
+
+            leaveRequests[index].status = "ปฏิเสธ";
+            localStorage.setItem('leaveRequests', JSON.stringify(leaveRequests));
+            alert("คำขอถูกปฏิเสธ");
+
+            // ลบคำขอที่ปฏิเสธออกจาก DOM
+            document.getElementById(`request-${index}`).remove();
+
+            // ส่งการแจ้งเตือนให้พนักงาน (Employee)
+            notifyEmployee(leaveRequests[index], "ปฏิเสธ");
+        }
+
+        function notifyEmployee(request, status) {
+            const employeeName = request.employeeName;
+            const leaveType = request.leaveType;
+            const leaveDate = request.leaveDate;
+            const leaveReason = request.leaveReason;
+            
+            // คุณสามารถเพิ่มโค้ดที่ต้องการในการแจ้งเตือนพนักงานที่นี่
+            console.log(`แจ้งเตือนถึงพนักงาน ${employeeName}: คำขอลา (${leaveType}) ของคุณสำหรับวันที่ ${leaveDate} ถูก${status}แล้ว.`);
+        }
+
+        function logout() {
+            // โค้ดออกจากระบบ (Logout) เช่น การเปลี่ยนหน้าไปยังหน้า Login
+            window.location.href = "login.html"; // ตัวอย่างการเปลี่ยนเส้นทางไปยังหน้า login
+        }
+    </script>
+</body>
+</html>

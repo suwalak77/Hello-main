@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบล็อกอิน</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container">
+        <h2>เข้าสู่ระบบ</h2>
+        <div>
+            <button onclick="showEmployeeLogin()">พนักงานทั่วไป</button>
+            <button onclick="showHrLogin()">HR</button>
+            <button onclick="goToHome()">กลับหน้าหลัก</button>
+        </div>
+
+        <div id="employee-login" style="display:none;">
+            <h3>ล็อกอินพนักงานทั่วไป</h3>
+            <div class="form-group">
+                <input type="text" id="employee-username" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <input type="password" id="employee-password" placeholder="Password" required>
+            </div>
+            <button onclick="employeeLogin()">เข้าสู่ระบบ</button>
+            <div id="employee-error-message"></div>
+        </div>
+
+        <div id="hr-login" style="display:none;">
+            <h3>ล็อกอินสำหรับ HR</h3>
+            <div class="form-group">
+                <input type="text" id="hr-username" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <input type="password" id="hr-password" placeholder="Password" required>
+            </div>
+            <button onclick="hrLogin()">เข้าสู่ระบบ</button>
+            <div id="hr-error-message"></div>
+        </div>
+    </div>
+
+    <script>
+        function showEmployeeLogin() {
+            document.getElementById('employee-login').style.display = "block";
+            document.getElementById('hr-login').style.display = "none";
+        }
+
+        function showHrLogin() {
+            document.getElementById('hr-login').style.display = "block";
+            document.getElementById('employee-login').style.display = "none";
+        }
+
+        function employeeLogin() {
+            const username = document.getElementById('employee-username').value;
+            const password = document.getElementById('employee-password').value;
+            const errorMessage = document.getElementById('employee-error-message');
+
+            if (username === "employee" && password === "employee123") {
+                window.location.href = "employee-dashboard.html";
+            } else {
+                errorMessage.innerHTML = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง!";
+                errorMessage.style.color = "red";
+            }
+        }
+
+        function hrLogin() {
+            const username = document.getElementById('hr-username').value;
+            const password = document.getElementById('hr-password').value;
+            const errorMessage = document.getElementById('hr-error-message');
+
+            if (username === "hr_admin" && password === "admin1234") {
+                window.location.href = "hr-dashboard.html";
+            } else {
+                errorMessage.innerHTML = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง!";
+                errorMessage.style.color = "red";
+            }
+        }
+
+        function goToHome() {
+            window.location.href = "index.html"; // เปลี่ยน URL เป็นหน้าหลักของคุณ
+        }
+    </script>
+</body>
+</html>
